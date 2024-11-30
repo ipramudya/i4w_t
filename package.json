@@ -1,27 +1,29 @@
 {
-  "name": "tele-ad-bot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node dist/index.js",
-    "dev": "nodemon",
-    "build": "tsc",
-    "serve": "node dist/index.js",
-    "fmt": "prettier --write 'src/**/*.ts'"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^22.10.1",
-    "nodemon": "^3.1.7",
-    "prettier": "^3.4.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "telegraf": "^4.16.3"
-  }
+	"name": "tele-ad-bot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "TF_CPP_MIN_LOG_LEVEL=2 node dist/index.js",
+		"dev": "TF_CPP_MIN_LOG_LEVEL=2 nodemon",
+		"build": "tsc",
+		"serve": "node dist/index.js",
+		"fmt": "prettier --write 'src/**/*.ts'"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/node": "^22.10.1",
+		"nodemon": "^3.1.7",
+		"prettier": "^3.4.1",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.7.2"
+	},
+	"dependencies": {
+		"@tensorflow-models/universal-sentence-encoder": "^1.3.3",
+		"@tensorflow/tfjs-node": "^4.22.0",
+		"dotenv": "^16.4.5",
+		"telegraf": "^4.16.3"
+	}
 }

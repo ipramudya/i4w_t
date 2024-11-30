@@ -1,0 +1,52 @@
+[
+	{
+		"id": 1,
+		"keywords": ["motorcycle", "ride", "adventure", "gear"],
+		"text": "Gear up for your next motorcycle adventure! Shop premium riding gear at adventuregear.com."
+	},
+	{
+		"id": 2,
+		"keywords": ["rain", "raincoat", "stay dry", "waterproof"],
+		"text": "Don't let the rain ruin your plans! Get our lightweight and waterproof raincoats at drydays.com."
+	},
+	{
+		"id": 3,
+		"keywords": ["event", "meetup", "organize", "community"],
+		"text": "Organize your community events with ease using EventPlanner. Sign up now at eventplanner.com!"
+	},
+	{
+		"id": 4,
+		"keywords": ["group travel", "vacation", "explore", "tours"],
+		"text": "Plan your next group vacation with ExploreTours! Discover packages tailored for you at exploretours.com."
+	},
+	{
+		"id": 5,
+		"keywords": ["fitness", "health", "workout", "exercise"],
+		"text": "Stay fit and healthy with our top-rated workout plans! Visit fitnesspro.com to start your journey today."
+	},
+	{
+		"id": 6,
+		"keywords": ["online learning", "education", "courses", "skills"],
+		"text": "Boost your skills with online courses from LearnAcademy. Enroll now at learnacademy.com!"
+	},
+	{
+		"id": 7,
+		"keywords": ["pet care", "dog", "cat", "food", "toys"],
+		"text": "Treat your furry friends with the best! Shop for pet food and toys at happypets.com."
+	},
+	{
+		"id": 8,
+		"keywords": ["cooking", "recipes", "kitchen", "food"],
+		"text": "Unlock your inner chef with our easy recipes and premium kitchen tools. Visit cheflife.com now!"
+	},
+	{
+		"id": 9,
+		"keywords": ["travel", "flights", "hotels", "vacation"],
+		"text": "Book your dream vacation at unbeatable prices! Flights, hotels, and more at traveldeals.com."
+	},
+	{
+		"id": 10,
+		"keywords": ["technology", "gadgets", "smartphones", "reviews"],
+		"text": "Stay updated on the latest tech and gadgets. Read expert reviews at techinsights.com."
+	}
+]

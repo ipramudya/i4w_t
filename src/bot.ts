@@ -1,13 +1,17 @@
 import { Context, Telegraf } from 'telegraf'
 import { message } from 'telegraf/filters'
+import { AdProcessor } from './ad-processor'
 
 export class TelegramBot {
 	private bot: Telegraf
+	private processor: AdProcessor
 
 	constructor(token: string) {
 		if (!token) throw new Error('token is required to access the bot')
 
 		this.bot = new Telegraf(token)
+		this.processor = new AdProcessor()
+
 		this.initializeHandlers()
 	}
 
@@ -45,9 +49,19 @@ export class TelegramBot {
 				const message = ctx.message.text
 
 				console.log(`Received message from user ${userId}: ${message}`)
+
+				const ad = await this.processor.analyzeMessage(message)
+				console.log({ ad })
+				if (ad) {
+					await ctx.reply(`📢 ${ad}`)
+					console.log(`sent ad to User ${userId}: "${ad}"`)
+				} else {
+					await ctx.reply('Thanks for your message! Stay tuned for updates.')
+					console.log(`no ad found for user ${userId}`)
+				}
 			}
 		} catch (error) {
-			console.log(`Error handling incoming message: ${(error as Error).message}`)
+			console.log(`error handling incoming message: ${(error as Error).message}`)
 			await ctx.reply('Sorry, something went wrong while processing your message.')
 		}
 	}
@@ -55,12 +69,15 @@ export class TelegramBot {
 	/**
 	 * Start the bot instance.
 	 */
-	public start(): void {
-		this.bot
-			.launch(() => console.log('Bot started successfully'))
-			.catch((error) => console.log(`Failed to start the bot: ${error.message}`))
+	public async start(): Promise<void> {
+		try {
+			await this.processor.initialize()
+			await this.bot.launch(() => console.log('bot started successfully'))
 
-		process.once('SIGINT', () => this.bot.stop('SIGINT'))
-		process.once('SIGTERM', () => this.bot.stop('SIGTERM'))
+			process.once('SIGINT', () => this.bot.stop('SIGINT'))
+			process.once('SIGTERM', () => this.bot.stop('SIGTERM'))
+		} catch (error) {
+			throw new Error(`Error starting bot: ${(error as Error).message}`)
+		}
 	}
 }
