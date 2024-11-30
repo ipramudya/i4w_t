@@ -50,8 +50,8 @@ The bot is built with the following components:
 1. Clone the depedencies
 
 ```bash
-git clone <repository_url>
-cd <project_directory>
+git clone https://github.com/ipramudya/i4w_t.git
+cd i4w_t
 ```
 
 2. Install depedencies
