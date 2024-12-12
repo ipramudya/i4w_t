@@ -71,6 +71,7 @@ export class TelegramBot {
 	 */
 	public async start(): Promise<void> {
 		try {
+			console.log('starting bot')
 			await this.processor.initialize()
 			await this.bot.launch(() => console.log('bot started successfully'))
 

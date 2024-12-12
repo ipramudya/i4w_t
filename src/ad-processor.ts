@@ -52,6 +52,10 @@ export class AdProcessor {
 		return highestScore > 0.5 ? bestAd?.text || null : null
 	}
 
+	/**
+	* Calculates the cosine similarity between two vectors (represented as TensorFlow tensors),
+	which is a measure of similarity between two non-zero vectors based on the cosine of the angle between them
+	*/
 	private computeCosineSimilarity(a: tf.Tensor2D, b: tf.Tensor2D): number {
 		const dotProduct = tf.sum(tf.mul(a, b)).arraySync() as number
 		const normA = tf.sqrt(tf.sum(tf.square(a))).arraySync() as number
@@ -59,6 +63,12 @@ export class AdProcessor {
 		return dotProduct / (normA * normB)
 	}
 
+	/**
+	 * Convert the message to lowercase, remove non-alphanumeric characters, and trim whitespace
+	 * @example
+	 * Input: "Hello, World! How are you?"
+	 * Output: "hello world how are you"
+	 */
 	private preprocessText(text: string): string {
 		return text
 			.toLowerCase()
