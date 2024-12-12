@@ -69,6 +69,14 @@ export class AdProcessor {
 		return this.sum(multipliedVecs)
 	}
 
+	/**
+	 * Combines multiple arrays into a single array using a custom combiner function.
+	 * @example
+	 * const arr1 = [1, 2, 3]
+	 * const arr2 = [4, 5, 6]
+	 * const operation = (a, b) => a + b
+	 * const result = [5, 7, 9]
+	 */
 	private zipWith(
 		arr1: number[],
 		arr2: number[],
