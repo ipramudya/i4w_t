@@ -1,18 +1,23 @@
+/**
+ * Credits
+ * https://www.kaggle.com/models/tensorflow/universal-sentence-encoder
+ * https://github.com/tensorflow/tfjs-models/blob/master/universal-sentence-encoder/README.md
+ */
+
 import * as use from '@tensorflow-models/universal-sentence-encoder'
-import * as tf from '@tensorflow/tfjs-node'
 import fs from 'fs/promises'
 import path from 'path'
 import type { Ad } from './types'
 
 export class AdProcessor {
 	private ads: Ad[] = []
-	private model: use.UniversalSentenceEncoder | null = null
+	private qnaModel: Awaited<ReturnType<typeof use.loadQnA>> | null = null
 
 	public async initialize(): Promise<void> {
-		if (!this.model) {
-			this.model = await use.load()
+		if (!this.qnaModel && this.ads.length === 0) {
+			this.qnaModel = await use.loadQnA()
+			this.ads = await this.loadAds()
 		}
-		this.ads = await this.loadAds()
 	}
 
 	private async loadAds(): Promise<Ad[]> {
@@ -23,44 +28,70 @@ export class AdProcessor {
 	}
 
 	public async analyzeMessage(message: string): Promise<string | null> {
-		if (!this.model) {
-			throw new Error('model not initialized')
+		if (!this.qnaModel) {
+			throw new Error('qna model not initialized')
 		}
 
-		// Encode the user message
-		const preprocessMessage = this.preprocessText(message)
-		const userEmbedding = (await this.model.embed(preprocessMessage)) as unknown as tf.Tensor2D
+		// Prepare input data for embeddings
+		const queries = [this.preprocessText(message)]
+		const responses = this.ads.map((ad) => this.preprocessText(ad.keywords.join(' ')))
 
-		let bestAd: Ad | null = null
+		// Generate embeddings for query and responses
+		const embeddings = this.qnaModel.embed({ queries, responses })
+		const embeddedQuery = embeddings['queryEmbedding'].arraySync() as number[][]
+		const embeddedResponses = embeddings['responseEmbedding'].arraySync() as number[][]
+
 		let highestScore = 0
+		let bestAd: Ad | null = null
 
-		for (const ad of this.ads) {
-			const adText = ad.keywords.join(' ')
-			const preprocessedAdText = this.preprocessText(adText)
-			const adEmbedding = (await this.model.embed(preprocessedAdText)) as unknown as tf.Tensor2D
+		// Get the coresponding ad for input message based on the highest similarity score
+		for (let i = 0; i < this.ads.length; i++) {
+			const ad = this.ads[i]
+			const similarityScore = this.dotProduct(embeddedQuery[0], embeddedResponses[i])
 
-			// Calculate similarity (cosine similarity)
-			const similarity = this.computeCosineSimilarity(userEmbedding, adEmbedding)
-
-			if (similarity > highestScore) {
-				highestScore = similarity
+			if (!similarityScore) {
+				continue
+			} else if (similarityScore > highestScore) {
+				highestScore = similarityScore
 				bestAd = ad
 			}
 		}
 
-		// Return the best ad if it meets the similarity threshold
-		return highestScore > 0.5 ? bestAd?.text || null : null
+		return bestAd?.text || null
 	}
 
-	/**
-	* Calculates the cosine similarity between two vectors (represented as TensorFlow tensors),
-	which is a measure of similarity between two non-zero vectors based on the cosine of the angle between them
-	*/
-	private computeCosineSimilarity(a: tf.Tensor2D, b: tf.Tensor2D): number {
-		const dotProduct = tf.sum(tf.mul(a, b)).arraySync() as number
-		const normA = tf.sqrt(tf.sum(tf.square(a))).arraySync() as number
-		const normB = tf.sqrt(tf.sum(tf.square(b))).arraySync() as number
-		return dotProduct / (normA * normB)
+	private dotProduct(vec1: number[], vec2: number[]) {
+		if (vec1.length !== vec2.length) return null
+
+		const operation = (a: number, b: number) => a * b
+		const multipliedVecs = this.zipWith(vec1, vec2, operation)
+
+		return this.sum(multipliedVecs)
+	}
+
+	private zipWith(
+		arr1: number[],
+		arr2: number[],
+		operation: (a: number, b: number) => number,
+	): number[] {
+		const result: number[] = []
+
+		for (let i = 0; i < arr1.length; i++) {
+			const operationResult = operation(arr1[i], arr2[i])
+			result.push(operationResult)
+		}
+
+		return result
+	}
+
+	private sum(arr: number[]): number {
+		let result = 0
+
+		for (let i = 0; i < arr.length; i++) {
+			result += arr[i]
+		}
+
+		return result
 	}
 
 	/**

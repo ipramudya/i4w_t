@@ -51,7 +51,7 @@ export class TelegramBot {
 				console.log(`Received message from user ${userId}: ${message}`)
 
 				const ad = await this.processor.analyzeMessage(message)
-				console.log({ ad })
+
 				if (ad) {
 					await ctx.reply(`📢 ${ad}`)
 					console.log(`sent ad to User ${userId}: "${ad}"`)
