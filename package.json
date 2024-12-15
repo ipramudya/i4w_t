@@ -2,7 +2,7 @@
 	"name": "tele-ad-bot",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "src/index.ts",
 	"scripts": {
 		"start": "TF_CPP_MIN_LOG_LEVEL=2 node dist/index.js",
 		"dev": "TF_CPP_MIN_LOG_LEVEL=2 nodemon",
