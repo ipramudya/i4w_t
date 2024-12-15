@@ -21,9 +21,8 @@ export class AdProcessor {
 	}
 
 	private async loadAds(): Promise<Ad[]> {
-		const adsPath = path.join(__dirname, 'data', 'ads.json')
+		const adsPath = path.join(process.cwd(), 'src', 'data', 'ads.json')
 		const data = await fs.readFile(adsPath, 'utf-8')
-
 		return JSON.parse(data) as Ad[]
 	}
 
